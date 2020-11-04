@@ -33,7 +33,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $protocol = 'mail';
+	public $protocol = 'smtp';
 
 	/**
 	 * The server path to Sendmail.
@@ -44,13 +44,16 @@ class Email extends BaseConfig
 
 	/**
 	 * SMTP Server Address
-	 *
+	 * - TLS 사용 시 `ssl://` 제거
+     * - 네이버 사용 시 smtp.naver.com
+     *
 	 * @var string
 	 */
-	public $SMTPHost;
+	public $SMTPHost = 'smtp.gmail.com';
 
 	/**
 	 * SMTP Username
+     * - 보안을 위해 `.env`에서 가져오기
 	 *
 	 * @var string
 	 */
@@ -58,24 +61,26 @@ class Email extends BaseConfig
 
 	/**
 	 * SMTP Password
-	 *
+	 * - 보안을 위해 `.env`에서 가져오기
+     *
 	 * @var string
 	 */
 	public $SMTPPass;
 
 	/**
 	 * SMTP Port
-	 *
+	 * - SSL = 465, TLS = 587
+     *
 	 * @var integer
 	 */
-	public $SMTPPort = 25;
+	public $SMTPPort = 465;
 
 	/**
 	 * SMTP Timeout (in seconds)
 	 *
 	 * @var integer
 	 */
-	public $SMTPTimeout = 5;
+	public $SMTPTimeout = 10;
 
 	/**
 	 * Enable persistent SMTP connections
@@ -89,7 +94,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPCrypto = 'tls';
+	public $SMTPCrypto = 'ssl';
 
 	/**
 	 * Enable word-wrap
@@ -110,7 +115,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $mailType = 'text';
+	public $mailType = 'html';
 
 	/**
 	 * Character set (utf-8, iso-8859-1, etc.)
@@ -168,4 +173,9 @@ class Email extends BaseConfig
 	 */
 	public $DSN = false;
 
+    public function __construct()
+    {
+        $this->SMTPUser = env('email.SMTPUser'); // 아이디
+        $this->SMTPPass = env('email.SMTPPass'); // 비밀번호
+    }
 }
