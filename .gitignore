@@ -83,7 +83,7 @@ phpunit
 #-------------------------
 # Composer
 #-------------------------
-vendor/
+vendor/*
 
 #-------------------------
 # IDE / Development Files
@@ -125,3 +125,9 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+#==================
+# Development
+#==================
+
+# codeigniter4/framework 는 업데이트 사항이 있을 경우, 비교분석 위해 git에 올린다.
+!vendor/codeigniter4/framework

@@ -1,8 +1,14 @@
 {
 	"name": "codeigniter4/appstarter",
 	"type": "project",
-	"description": "CodeIgniter4 starter app",
-	"homepage": "https://codeigniter.com",
+    "authors": [
+        {
+            "name": "홍준성",
+            "email": "powerstar13@hanmail.net"
+        }
+    ],
+    "description": "[PHP] Codeigniter v4.0.4 초기화",
+    "homepage": "https://projectName.com",
 	"license": "MIT",
 	"require": {
 		"php": ">=7.2",
