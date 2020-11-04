@@ -11,6 +11,8 @@ class Home extends BaseController
      */
     public function index()
     {
-        return view('welcome_message');
+        $data = array();
+
+        return layoutRender('default', 'Modules\Common\Views\home', $data);
     }
 }
