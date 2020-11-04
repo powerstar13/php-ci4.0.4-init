@@ -62,9 +62,9 @@ class Database extends \CodeIgniter\Database\Config
 		'hostname' => '127.0.0.1',
 		'username' => '',
 		'password' => '',
-		'database' => ':memory:',
-		'DBDriver' => 'SQLite3',
-		'DBPrefix' => 'db_',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
+		'database' => 'MySQLi',
+		'DBDriver' => '',
+		'DBPrefix' => '',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
 		'pConnect' => false,
 		'DBDebug'  => (ENVIRONMENT !== 'production'),
 		'cacheOn'  => false,
@@ -106,7 +106,9 @@ class Database extends \CodeIgniter\Database\Config
 					}
 				}
 			}
-		}
+        }
+
+        $this->defaultGroup = (ENVIRONMENT !== 'production' || isTestServer() ? 'tests' : 'default'); // Deploy 서버만 운영DB에 연결되도록 처리
 	}
 
 	//--------------------------------------------------------------------
