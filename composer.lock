@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e3c5712accb4893c8f1c11a63b6d6e5",
+    "content-hash": "216706dadc3e71f2a3f69d712b2d546b",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -51,6 +51,42 @@
             "description": "The CodeIgniter framework v4",
             "homepage": "https://codeigniter.com",
             "time": "2020-07-16T03:44:28+00:00"
+        },
+        {
+            "name": "codeigniter4/translations",
+            "version": "v4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeigniter4/translations.git",
+                "reference": "a00809088fa974af77f63d93123d9db7bd4f6945"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeigniter4/translations/zipball/a00809088fa974af77f63d93123d9db7bd4f6945",
+                "reference": "a00809088fa974af77f63d93123d9db7bd4f6945",
+                "shasum": ""
+            },
+            "require": {
+                "ext-intl": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "codeigniter4/framework": "dev-master",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Translations\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Translations for CodeIgniter v4 web framework",
+            "homepage": "https://codeigniter.com",
+            "time": "2020-04-22T03:26:13+00:00"
         },
         {
             "name": "kint-php/kint",
