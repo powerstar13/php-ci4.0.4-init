@@ -21,14 +21,12 @@ class Autoload extends AutoloadConfig
 	 * -------------------------------------------------------------------
 	 * Namespaces
 	 * -------------------------------------------------------------------
-	 * This maps the locations of any namespaces in your application to
-	 * their location on the file system. These are used by the autoloader
-	 * to locate files the first time they have been instantiated.
-	 *
-	 * The '/app' and '/system' directories are already mapped for you.
-	 * you may change the name of the 'App' namespace if you wish,
-	 * but this should be done prior to creating any namespaced classes,
-	 * else you will need to modify all of those classes for this to work.
+	 * 이 맵핑은 응용프로그램의 이름 공간 위치를 파일 시스템의 위치로 매핑합니다.
+     * 이것들은 자동 로더에 의해 처음 인스턴스화되었을 때 파일을 찾는 데 사용된다.
+     *
+     * '/app' 및 '/system' 디렉토리가 이미 매핑되었습니다.
+     * 원하는 경우 'App' 네임스페이스의 이름을 변경할 수 있지만, 네임스페이스 클래스를 만들기 전에 이 작업을 수행해야 합니다.
+     * 그렇지 않으면 이 작업이 수행되도록 모든 클래스를 수정해야 합니다.
 	 *
 	 * Prototype:
 	 *
@@ -41,18 +39,16 @@ class Autoload extends AutoloadConfig
 	 */
 	public $psr4 = [
 		APP_NAMESPACE => APPPATH, // For custom app namespace
-		'Config'      => APPPATH . 'Config',
+        'Config'      => APPPATH . 'Config',
+        'Modules'     => ROOTPATH . 'modules', // 모듈 경로 등록
 	];
 
 	/**
 	 * -------------------------------------------------------------------
 	 * Class Map
 	 * -------------------------------------------------------------------
-	 * The class map provides a map of class names and their exact
-	 * location on the drive. Classes loaded in this manner will have
-	 * slightly faster performance because they will not have to be
-	 * searched for within one or more directories as they would if they
-	 * were being autoloaded through a namespace.
+	 * 클래스 맵은 클래스 이름과 드라이브의 정확한 위치를 매핑합니다.
+     * 이러한 방식으로로드된 클래스는 네임 스페이스를 통해 자동로드되는 경우처럼 하나 이상의 디렉토리 내에서 검색할 필요가 없기 때문에 성능이 약간 빨라집니다.
 	 *
 	 * Prototype:
 	 *

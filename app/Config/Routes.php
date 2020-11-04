@@ -15,22 +15,20 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * Router Setup
  * --------------------------------------------------------------------
  */
-$routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultNamespace('Modules'); // 모듈 namespace를 기본으로 설정
+$routes->setDefaultController('Common\Controllers\Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false); // 자동 라우팅을 비활성화하여 정의한 경로만 액세스 할 수 있다.
 
 /**
  * --------------------------------------------------------------------
  * Route Definitions
  * --------------------------------------------------------------------
  */
-
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+// CodeIgniter는 라우팅 규칙을 위에서 아래로 읽고, 요청과 첫 번째로 일치하는 규칙으로 라우팅합니다.
+$routes->get('/', 'Common\Controllers\Home::index'); // 디렉토리를 스캔하지 않아도 되므로 기본 경로를 지정하여 성능이 향상됩니다.
 
 /**
  * --------------------------------------------------------------------
