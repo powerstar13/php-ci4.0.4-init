@@ -26,5 +26,19 @@ class Services extends CoreServices
 	//        }
 	//
 	//        return new \CodeIgniter\Example();
-	//    }
+    //    }
+
+    //------------------------------------------------------------------
+
+    public static function excelLib($getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('excelLib');
+        }
+
+        return new \Modules\Common\Libraries\ExcelLib();
+    }
+
+    //------------------------------------------------------------------
 }
