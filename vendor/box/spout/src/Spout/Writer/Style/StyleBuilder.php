@@ -2,6 +2,8 @@
 
 namespace Box\Spout\Writer\Style;
 
+use \Box\Spout\Common\Exception\InvalidArgumentException; // 정렬값에 해당하지 않는 값일 경우 Exception
+
 /**
  * Class StyleBuilder
  * Builder to create new styles
@@ -118,6 +120,45 @@ class StyleBuilder
     public function setShouldWrapText($shouldWrap = true)
     {
         $this->style->setShouldWrapText($shouldWrap);
+        return $this;
+    }
+
+    /**
+     * =====================================
+     * 좌우 정렬 left, center, right, justify
+     * Sets the cell horizontal alignment.
+     *
+     * @param string $cellHorizontalAlignment : The cell horizontal alignment
+     * @return StyleBuilder
+     * =====================================
+     */
+    public function setCellHorizontalAlignment($cellHorizontalAlignment)
+    {
+        if (!CellHorizontalAlignment::isValid($cellHorizontalAlignment)) {
+            throw new InvalidArgumentException('Invalid cell horizontal alignment value');
+        }
+
+        $this->style->setCellHorizontalAlignment($cellHorizontalAlignment);
+
+        return $this;
+    }
+
+    /**
+     * =====================================
+     * 상하 정렬 top, center, bottom
+     *
+     * @param string $CellVerticalAlignment : The cell vertical alignment
+     * @return StyleBuilder
+     * =====================================
+     */
+    public function setCellVerticalAlignment($cellVerticalAlignment)
+    {
+        if (!CellVerticalAlignment::isValid($cellVerticalAlignment)) {
+            throw new InvalidArgumentException('Invalid cell vertical alignment value');
+        }
+
+        $this->style->setCellVerticalAlignment($cellVerticalAlignment);
+
         return $this;
     }
 

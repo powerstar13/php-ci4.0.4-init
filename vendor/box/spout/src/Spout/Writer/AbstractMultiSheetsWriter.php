@@ -60,6 +60,47 @@ abstract class AbstractMultiSheetsWriter extends AbstractWriter
     }
 
     /**
+     * =================================
+     * cell | row --> Merge 기능
+     *
+     * @author 홍준성 <powerstar13@kai-i.com>
+     * @param string $sheetName : 시트명
+     * @param string $start : 시작 cell | row
+     * @param string $end : 종료 cell | row
+     * =================================
+     */
+    public function mergeCells($sheetName = 'sheet1', $start = '', $end = '')
+    {
+        $worksheets = $this->getWorkbook()->getWorksheets();
+
+        /** @var Common\Internal\WorksheetInterface $worksheet */
+        foreach ($worksheets as $worksheet) {
+            $worksheet->mergeCells($sheetName, $start, $end);
+        }
+    }
+
+    /**
+     * =================================
+     * Cell 너비 설정 기능
+     *
+     * @param string $sheetName : 적용할 Sheet 이름
+     * @param string $min : 적용 시작할 Cell (A1 --> 1)
+     * @param string $max : 적용 종료할 Cell (D1 --> 4)
+     * @param string $width : 적용할 Cell의 너비값
+     * @return void
+     * =================================
+     */
+    public function colWidths($sheetName = 'sheet1', $min = '1', $max = '1', $width = '')
+    {
+        $worksheets = $this->getWorkbook()->getWorksheets();
+
+        /** @var Common\Internal\WorksheetInterface $worksheet */
+        foreach ($worksheets as $worksheet) {
+            $worksheet->colWidths($sheetName, $min, $max, $width);
+        }
+    }
+
+    /**
      * Creates a new sheet and make it the current sheet. The data will now be written to this sheet.
      *
      * @api
@@ -116,4 +157,3 @@ abstract class AbstractMultiSheetsWriter extends AbstractWriter
         }
     }
 }
-

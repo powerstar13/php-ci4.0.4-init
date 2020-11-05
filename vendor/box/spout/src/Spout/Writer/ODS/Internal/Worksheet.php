@@ -123,16 +123,21 @@ class Worksheet implements WorksheetInterface
     }
 
     /**
+     * ===================================================================================================
+     * Style을 포함한 Row 추가 시, 세 번째 매개 변수에 배열 $custom 전달하여 `height` 설정 가능
+     * ===================================================================================================
+     *
      * Adds data to the worksheet.
      *
      * @param array $dataRow Array containing data to be written. Cannot be empty.
      *          Example $dataRow = ['data1', 1234, null, '', 'data5'];
      * @param \Box\Spout\Writer\Style\Style $style Style to be applied to the row. NULL means use default style.
+     * @param array $custom : Key 값으로 'height' 명시하고 value 로 높이 지정
      * @return void
      * @throws \Box\Spout\Common\Exception\IOException If the data cannot be written
      * @throws \Box\Spout\Common\Exception\InvalidArgumentException If a cell value's type is not supported
      */
-    public function addRow($dataRow, $style)
+    public function addRow($dataRow, $style, $custom)
     {
         // $dataRow can be an associative array. We need to transform
         // it into a regular array, as we'll use the numeric indexes.

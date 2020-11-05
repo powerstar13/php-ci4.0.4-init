@@ -135,6 +135,10 @@ abstract class AbstractWorkbook implements WorkbookInterface
     }
 
     /**
+     * ===================================================================================================
+     * Style을 포함한 Row 추가 시, 세 번째 매개 변수에 배열 $custom 전달하여 `height` 설정 가능
+     * ===================================================================================================
+     *
      * Adds data to the current sheet.
      * If shouldCreateNewSheetsAutomatically option is set to true, it will handle pagination
      * with the creation of new worksheets if one worksheet has reached its maximum capicity.
@@ -142,11 +146,12 @@ abstract class AbstractWorkbook implements WorkbookInterface
      * @param array $dataRow Array containing data to be written. Cannot be empty.
      *          Example $dataRow = ['data1', 1234, null, '', 'data5'];
      * @param \Box\Spout\Writer\Style\Style $style Style to be applied to the row.
+     * @param array $custom : Key 값으로 'height' 명시하고 value 로 높이 지정
      * @return void
      * @throws \Box\Spout\Common\Exception\IOException If trying to create a new sheet and unable to open the sheet for writing
      * @throws \Box\Spout\Writer\Exception\WriterException If unable to write data
      */
-    public function addRowToCurrentWorksheet($dataRow, $style)
+    public function addRowToCurrentWorksheet($dataRow, $style, $custom)
     {
         $currentWorksheet = $this->getCurrentWorksheet();
         $hasReachedMaxRows = $this->hasCurrentWorkseetReachedMaxRows();
@@ -160,14 +165,14 @@ abstract class AbstractWorkbook implements WorkbookInterface
 
                 $updatedStyle = $styleHelper->applyExtraStylesIfNeeded($style, $dataRow);
                 $registeredStyle = $styleHelper->registerStyle($updatedStyle);
-                $currentWorksheet->addRow($dataRow, $registeredStyle);
+                $currentWorksheet->addRow($dataRow, $registeredStyle, $custom); // $custom 배열을 통해 높이($height) 값 전달
             } else {
                 // otherwise, do nothing as the data won't be read anyways
             }
         } else {
             $updatedStyle = $styleHelper->applyExtraStylesIfNeeded($style, $dataRow);
             $registeredStyle = $styleHelper->registerStyle($updatedStyle);
-            $currentWorksheet->addRow($dataRow, $registeredStyle);
+            $currentWorksheet->addRow($dataRow, $registeredStyle, $custom); // $custom 배열을 통해 높이($height) 값 전달
         }
     }
 

@@ -4,6 +4,8 @@ namespace Box\Spout\Writer\ODS\Helper;
 
 use Box\Spout\Writer\Common\Helper\AbstractStyleHelper;
 use Box\Spout\Writer\Style\BorderPart;
+use Box\Spout\Writer\Style\CellHorizontalAlignment;
+use Box\Spout\Writer\Style\CellVerticalAlignment;
 
 /**
  * Class StyleHelper
@@ -219,6 +221,7 @@ EOD;
         $content = '<style:style style:data-style-name="N0" style:family="table-cell" style:name="ce' . $styleIndex . '" style:parent-style-name="Default">';
 
         $content .= $this->getTextPropertiesSectionContent($style);
+        $content .= $this->getParagraphPropertiesSectionContent($style); // 좌우 정렬
         $content .= $this->getTableCellPropertiesSectionContent($style);
 
         $content .= '</style:style>';
@@ -234,17 +237,17 @@ EOD;
      */
     private function getTextPropertiesSectionContent($style)
     {
-        $content = '';
-
-        if ($style->shouldApplyFont()) {
-            $content .= $this->getFontSectionContent($style);
+        if (!$style->shouldApplyFont()) {
+            return '';
         }
 
-        return $content;
+        return '<style:text-properties '
+            . $this->getFontSectionContent($style)
+            . '/>';
     }
 
     /**
-     * Returns the contents of the "<style:text-properties>" section, inside "<style:style>" section
+     * Returns the contents of the fonts definition section, inside "<style:text-properties>" section
      *
      * @param \Box\Spout\Writer\Style\Style $style
      * @return string
@@ -253,7 +256,7 @@ EOD;
     {
         $defaultStyle = $this->getDefaultStyle();
 
-        $content = '<style:text-properties';
+        $content = '';
 
         $fontColor = $style->getFontColor();
         if ($fontColor !== $defaultStyle->getFontColor()) {
@@ -283,9 +286,110 @@ EOD;
             $content .= ' style:text-line-through-style="solid"';
         }
 
-        $content .= '/>';
-
         return $content;
+    }
+
+    /**
+     * ======================
+     * 좌우 정렬
+     * ======================
+     */
+
+    /**
+     * Returns the contents of the "<style:paragraph-properties>" section, inside "<style:style>" section
+     *
+     * @param \Box\Spout\Common\Entity\Style\Style $style
+     *
+     * @return string
+     */
+    private function getParagraphPropertiesSectionContent($style)
+    {
+        if (!$style->shouldApplyCellHorizontalAlignment()) {
+            return '';
+        }
+
+        return '<style:paragraph-properties '
+            . $this->getCellHorizontalAlignmentSectionContent($style)
+            . '/>';
+    }
+
+    /**
+     * Returns the contents of the cell horizontal alignment definition for the "<style:paragraph-properties>" section
+     *
+     * @param \Box\Spout\Common\Entity\Style\Style $style
+     *
+     * @return string
+     */
+    private function getCellHorizontalAlignmentSectionContent($style)
+    {
+        return sprintf(
+            ' fo:text-align="%s" ',
+            $this->transformCellHorizontalAlignment($style->getCellHorizontalAlignment())
+        );
+    }
+
+    /**
+     * Even though "left" and "right" alignments are part of the spec, and interpreted
+     * respectively as "start" and "end", using the recommended values increase compatibility
+     * with software that will read the created ODS file.
+     *
+     * @param string $cellHorizontalAlignment
+     *
+     * @return string
+     */
+    private function transformCellHorizontalAlignment($cellHorizontalAlignment)
+    {
+        switch ($cellHorizontalAlignment) {
+            case CellHorizontalAlignment::LEFT: return 'start';
+            case CellHorizontalAlignment::RIGHT: return 'end';
+            default: return $cellHorizontalAlignment;
+        }
+    }
+
+    /**
+     * ==================================
+     * 상하 정렬
+     * ==================================
+     */
+    private function getCellVerticalAlignmentContent($style)
+    {
+        if (!$style->shouldApplyCellVerticalAlignment()) {
+            return '';
+        }
+
+        return $this->getCellVerticalAlignmentSectionContent($style);
+    }
+
+    /**
+     * Returns the contents of the cell vertical alignment definition for the "<style:paragraph-properties>" section
+     *
+     * @param \Box\Spout\Common\Entity\Style\Style $style
+     *
+     * @return string
+     */
+    private function getCellVerticalAlignmentSectionContent($style)
+    {
+        return sprintf(
+            ' style:vertical-align="%s" ',
+            $this->transformCellVerticalAlignment($style->getCellVerticalAlignment())
+        );
+    }
+
+    /**
+     * Even though "center" alignments are part of the spec, and interpreted
+     * respectively as "middle", using the recommended values increase compatibility
+     * with software that will read the created ODS file.
+     *
+     * @param string $cellVerticalAlignment
+     *
+     * @return string
+     */
+    private function transformCellVerticalAlignment($cellVerticalAlignment)
+    {
+        switch ($cellVerticalAlignment) {
+            case CellVerticalAlignment::CENTER: return 'middle';
+            default: return $cellVerticalAlignment;
+        }
     }
 
     /**
@@ -296,11 +400,13 @@ EOD;
      */
     private function getTableCellPropertiesSectionContent($style)
     {
-        $content = '';
+        $content = '<style:table-cell-properties ';
 
         if ($style->shouldWrapText()) {
             $content .= $this->getWrapTextXMLContent();
         }
+
+        $content .= $this->getCellVerticalAlignmentContent($style); // 상하 정렬
 
         if ($style->shouldApplyBorder()) {
             $content .= $this->getBorderXMLContent($style);
@@ -309,6 +415,8 @@ EOD;
         if ($style->shouldApplyBackgroundColor()) {
             $content .= $this->getBackgroundColorXMLContent($style);
         }
+
+        $content .= '/>';
 
         return $content;
     }
@@ -320,7 +428,7 @@ EOD;
      */
     private function getWrapTextXMLContent()
     {
-        return '<style:table-cell-properties fo:wrap-option="wrap" style:vertical-align="automatic"/>';
+        return ' fo:wrap-option="wrap" style:vertical-align="automatic" ';
     }
 
     /**
@@ -331,13 +439,11 @@ EOD;
      */
     private function getBorderXMLContent($style)
     {
-        $borderProperty = '<style:table-cell-properties %s />';
-
         $borders = array_map(function (BorderPart $borderPart) {
             return BorderHelper::serializeBorderPart($borderPart);
         }, $style->getBorder()->getParts());
 
-        return sprintf($borderProperty, implode(' ', $borders));
+        return sprintf(' %s ', implode(' ', $borders));
     }
 
     /**
@@ -348,9 +454,6 @@ EOD;
      */
     private function getBackgroundColorXMLContent($style)
     {
-        return sprintf(
-            '<style:table-cell-properties fo:background-color="#%s"/>',
-            $style->getBackgroundColor()
-        );
+        return sprintf(' fo:background-color="#%s" ', $style->getBackgroundColor());
     }
 }

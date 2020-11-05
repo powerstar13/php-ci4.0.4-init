@@ -56,6 +56,30 @@ class Style
     /** @var bool Whether specific font properties should be applied */
     protected $shouldApplyFont = false;
 
+    /**
+     * =====================================
+     * 좌우 정렬
+     * =====================================
+     */
+    /** @var bool Whether specific cell horizontal alignment should be applied */
+    private $shouldApplyCellHorizontalAlignment = false;
+    /** @var string Cellh horizontal alignment */
+    private $cellHorizontalAlignment;
+    /** @var bool Whether the cell horizontal alignment property was set */
+    private $hasSetCellHorizontalAlignment = false;
+
+    /**
+     * =====================================
+     * 상하 정렬
+     * =====================================
+     */
+    /** @var bool Whether specific cell veritcal alignment should be applied */
+    private $shouldApplyCellVerticalAlignment = false;
+    /** @var string Cell veritcal alignment */
+    private $cellVerticalAlignment;
+    /** @var bool Whether the cell veritcal alignment property was set */
+    private $hasSetCellVerticalAlignment = false;
+
     /** @var bool Whether the text should wrap in the cell (useful for long or multi-lines text) */
     protected $shouldWrapText = false;
     /** @var bool Whether the wrap text property was set */
@@ -262,6 +286,94 @@ class Style
     }
 
     /**
+     * =====================================
+     * 좌우 정렬
+     * =====================================
+     */
+
+    /**
+     * @return string
+     */
+    public function getCellHorizontalAlignment()
+    {
+        return $this->cellHorizontalAlignment;
+    }
+
+    /**
+     * @param string $cellHorizontalAlignment The cell horizontal alignment
+     *
+     * @return Style
+     */
+    public function setCellHorizontalAlignment($cellHorizontalAlignment)
+    {
+        $this->cellHorizontalAlignment = $cellHorizontalAlignment;
+        $this->hasSetCellHorizontalAlignment = true;
+        $this->shouldApplyCellHorizontalAlignment = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSetCellHorizontalAlignment()
+    {
+        return $this->hasSetCellHorizontalAlignment;
+    }
+
+    /**
+     * @return bool Whether specific cell horizontal alignment should be applied
+     */
+    public function shouldApplyCellHorizontalAlignment()
+    {
+        return $this->shouldApplyCellHorizontalAlignment;
+    }
+
+    /**
+     * =====================================
+     * 상하 정렬
+     * =====================================
+     */
+
+    /**
+     * @return string
+     */
+    public function getCellVerticalAlignment()
+    {
+        return $this->cellVerticalAlignment;
+    }
+
+    /**
+     * @param string $cellVerticalAlignment The cell vertical alignment
+     *
+     * @return Style
+     */
+    public function setCellVerticalAlignment($cellVerticalAlignment)
+    {
+        $this->cellVerticalAlignment = $cellVerticalAlignment;
+        $this->hasSetCellVerticalAlignment = true;
+        $this->shouldApplyCellVerticalAlignment = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSetCellVerticalAlignment()
+    {
+        return $this->hasSetCellVerticalAlignment;
+    }
+
+    /**
+     * @return bool Whether specific cell vertical alignment should be applied
+     */
+    public function shouldApplyCellVerticalAlignment()
+    {
+        return $this->shouldApplyCellVerticalAlignment;
+    }
+
+    /**
      * @return bool
      */
     public function shouldWrapText()
@@ -413,13 +525,29 @@ class Style
      */
     private function mergeCellProperties($styleToUpdate, $baseStyle)
     {
-        if (!$this->hasSetWrapText && $baseStyle->shouldWrapText()) {
+        if (!$this->hasSetWrapText() && $baseStyle->shouldWrapText()) {
             $styleToUpdate->setShouldWrapText();
+        }
+        /**
+         * =====================================
+         * 좌우 정렬
+         * =====================================
+         */
+        if (!$this->hasSetCellHorizontalAlignment() && $baseStyle->shouldApplyCellHorizontalAlignment()) {
+            $styleToUpdate->setCellHorizontalAlignment($baseStyle->getCellHorizontalAlignment());
+        }
+        /**
+         * =====================================
+         * 상하 정렬
+         * =====================================
+         */
+        if (!$this->hasSetCellVerticalAlignment() && $baseStyle->shouldApplyCellVerticalAlignment()) {
+            $styleToUpdate->setCellVerticalAlignment($baseStyle->getCellVerticalAlignment());
         }
         if (!$this->getBorder() && $baseStyle->shouldApplyBorder()) {
             $styleToUpdate->setBorder($baseStyle->getBorder());
         }
-        if (!$this->hasSetBackgroundColor && $baseStyle->shouldApplyBackgroundColor()) {
+        if (!$this->shouldApplyBackgroundColor() && $baseStyle->shouldApplyBackgroundColor()) {
             $styleToUpdate->setBackgroundColor($baseStyle->getBackgroundColor());
         }
     }

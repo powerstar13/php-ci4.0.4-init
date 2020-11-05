@@ -314,9 +314,30 @@ EOD;
 
             $content .= sprintf(' applyBorder="%d"', $style->shouldApplyBorder() ? 1 : 0);
 
-            if ($style->shouldWrapText()) {
+            /**
+             * =====================================
+             * 좌우 정렬 || 상하 정렬 || Wrap 처리
+             * =====================================
+             */
+            if ($style->shouldApplyCellHorizontalAlignment() || $style->shouldApplyCellVerticalAlignment() || $style->shouldWrapText()) {
                 $content .= ' applyAlignment="1">';
-                $content .= '<alignment wrapText="1"/>';
+                $content .= '<alignment';
+                /**
+                 * 좌우 정렬
+                 */
+                if ($style->shouldApplyCellHorizontalAlignment()) {
+                    $content .= sprintf(' horizontal="%s"', $style->getCellHorizontalAlignment());
+                }
+                /**
+                 * 상하 정렬
+                 */
+                if ($style->shouldApplyCellVerticalAlignment()) {
+                    $content .= sprintf(' vertical="%s"', $style->getCellVerticalAlignment());
+                }
+                if ($style->shouldWrapText()) {
+                    $content .= ' wrapText="1"';
+                }
+                $content .= '/>';
                 $content .= '</xf>';
             } else {
                 $content .= '/>';
